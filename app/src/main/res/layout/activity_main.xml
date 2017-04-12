@@ -8,51 +8,16 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity">
-
-    <LinearLayout
-        android:id="@+id/inputLayout"
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        >
-        <Button
-            android:id="@+id/btnSearch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Search"
-            android:drawableLeft="@android:drawable/ic_menu_search"
-            android:onClick="handleSearchClick"
-            />
-
-        <EditText
-            android:id="@+id/txtSearch"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:hint="Movie title..."
-            android:layout_weight="1"
-            />
-    </LinearLayout>
+        android:layout_height="match_parent">
 
     <FrameLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/inputLayout"
         />
 
-    <!--<fragment-->
-        <!--android:id="@+id/fragment"-->
-        <!--android:name="edu.uw.fragmentdemo.MoviesFragment"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_below="@id/inputLayout"-->
-        <!--/>-->
-
-    <!--<ListView-->
-        <!--android:id="@+id/listView"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_below="@id/inputLayout"-->
-        <!--/>-->
-
+ </android.support.v4.view.ViewPager>
 </RelativeLayout>
