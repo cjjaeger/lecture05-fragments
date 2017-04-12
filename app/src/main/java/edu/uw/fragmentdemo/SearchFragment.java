@@ -16,7 +16,7 @@ import android.widget.EditText;
  * A simple {@link Fragment} subclass.
  */
 public class SearchFragment extends Fragment {
-
+    private OnSearchListener callback;
     public interface OnSearchListener{
         void onSearchSubmitted(String searchTerm);
     }
@@ -24,6 +24,11 @@ public class SearchFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        try {
+            callback = (OnSearchListener)context;
+        }catch(ClassCastException e) {
+            throw new ClassCastException(context.toString() + " must implement OnSearchListener");
+        }
     }
 
     public SearchFragment() {
@@ -44,12 +49,12 @@ public class SearchFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_search, container, false);
-        EditText text = (EditText)rootView.findViewById(R.id.txtSearch);
-        final String searchTerm = text.getText().toString();
+        final EditText text = (EditText)rootView.findViewById(R.id.txtSearch);
         rootView.findViewById(R.id.btnSearch).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((OnSearchListener)getActivity()).onSearchSubmitted(searchTerm);
+                String searchTerm = text.getText().toString();
+                callback.onSearchSubmitted(searchTerm);
             }
         });
         return rootView;

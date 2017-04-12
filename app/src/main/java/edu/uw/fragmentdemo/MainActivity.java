@@ -23,12 +23,12 @@ public class MainActivity extends AppCompatActivity implements MoviesFragment.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        searchFragment = SearchFragment.newInstance();
 
         mAdapter = new MoviePagerAdapter(getSupportFragmentManager());
 
         mPager = (ViewPager)findViewById(R.id.viewPager);
         mPager.setAdapter(mAdapter);
-        searchFragment = SearchFragment.newInstance();
 
     }
     public class MoviePagerAdapter extends FragmentStatePagerAdapter {
@@ -42,8 +42,10 @@ public class MainActivity extends AppCompatActivity implements MoviesFragment.On
                 fragment = searchFragment;
             }else if(position== 1){
                 fragment = moviesFragment;
-            }else{
+            }else if(position == 2){
                 fragment = detailFragment;
+            }else{
+                fragment = null;
             }
 
             return fragment;
@@ -56,40 +58,41 @@ public class MainActivity extends AppCompatActivity implements MoviesFragment.On
 
         @Override
         public int getCount() {
-            mPager.getCurrentItem();
-            return mPager.getCurrentItem()+1;
+            if(moviesFragment == null){
+                return 1;
+            } else if (detailFragment == null) {
+                return 2;
+            } else {
+                return 3;
+            }
         }
     }
 
-    //respond to search button clicking
-    public void handleSearchClick(View v){
-        EditText text = (EditText)findViewById(R.id.txtSearch);
-        String searchTerm = text.getText().toString();
 
-        //add a new results fragment to the page
-        MoviesFragment fragment = MoviesFragment.newInstance(searchTerm);
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.container, fragment, "MoviesFragment");
-        ft.addToBackStack(null); //remember for the back button
-        ft.commit();
-    }
 
     @Override
     public void onMovieSelected(Movie movie) {
         detailFragment = DetailFragment.newInstance(movie.toString(), movie.imdbId);
         mAdapter.notifyDataSetChanged();
-        mPager.setCurrentItem(3);
+        mPager.setCurrentItem(2);
 
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, detailFragment, null)
-                .addToBackStack(null)
-                .commit();
     }
 
     @Override
     public void onSearchSubmitted(String searchTerm) {
         moviesFragment = MoviesFragment.newInstance(searchTerm);
         mAdapter.notifyDataSetChanged();
-        mPager.setCurrentItem(2);
+        mPager.setCurrentItem(1);
+    }
+    @Override
+    public void onBackPressed() {
+        if (mPager.getCurrentItem() == 0) {
+            // If the user is currently looking at the first step, allow the system to handle the
+            // Back button. This calls finish() on this activity and pops the back stack.
+            super.onBackPressed();
+        } else {
+            // Otherwise, select the previous step.
+            mPager.setCurrentItem(mPager.getCurrentItem() - 1);
+        }
     }
 }
